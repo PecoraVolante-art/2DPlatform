@@ -124,6 +124,14 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            uiManager.TogglePause();
+        }
+
+        if (Time.timeScale == 0f)
+            return;
+
         if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);

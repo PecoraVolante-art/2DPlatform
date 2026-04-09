@@ -6,6 +6,7 @@ public class UIManager : MonoBehaviour
 {
     public GameObject GameOverPanel;
     public GameObject VictoryPanel;
+    public GameObject PausePanel;
     public Slider healthSlider;
     public Gradient gradient;
     public Image fill;
@@ -14,6 +15,7 @@ public class UIManager : MonoBehaviour
     [Header("Stato di gioco")]
     public bool isGameOver = false;
     public bool isVictory = false;
+    public bool isPaused = false;
 
     private void Awake()
     {
@@ -51,6 +53,11 @@ public class UIManager : MonoBehaviour
 
         if (GameOverPanel != null)
             GameOverPanel.SetActive(false);
+
+        if (PausePanel != null)
+            PausePanel.SetActive(false);
+
+        Time.timeScale = 1f;
 
     }
 
@@ -91,6 +98,16 @@ public class UIManager : MonoBehaviour
         healthSlider.value = health;
 
         fill.color = gradient.Evaluate(healthSlider.normalizedValue);
+    }
+
+    public void TogglePause()
+    {
+        isPaused = !isPaused;
+
+        if (PausePanel != null)
+            PausePanel.SetActive(isPaused);
+
+        Time.timeScale = isPaused ? 0f : 1f;
     }
 
 }
