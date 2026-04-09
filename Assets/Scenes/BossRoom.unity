@@ -5097,7 +5097,7 @@ MonoBehaviour:
   WhiteMoon: {fileID: 1587939321}
   RedMoon: {fileID: 2089308856}
   BossSpawnPoint: {fileID: 2037238774}
-  spawnDelay: 3
+  spawnDelay: 8
   SpawnEffect: {fileID: 5285602748307693255, guid: fdffb41f60a79f743ad07b0501365bf2, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

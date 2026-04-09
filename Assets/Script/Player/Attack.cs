@@ -14,8 +14,7 @@ public class AttackComand : MonoBehaviour
     public float AttackRate = 2f;
     float NextAttackTime = 0;
 
-    [Header("KnockBack")]
-    public float knockbackForce = 50;
+
 
     private void Awake()
     {
@@ -25,7 +24,7 @@ public class AttackComand : MonoBehaviour
 
     private void Update()
     {
-        if (Time.time >=  NextAttackTime)
+        if (Time.time >= NextAttackTime)
         {
             if (Input.GetKeyDown(KeyCode.K))
             {
@@ -39,18 +38,21 @@ public class AttackComand : MonoBehaviour
     {
         anim.SetTrigger("Attack");
 
+        if (GestioneSFX.Instance != null)
+            GestioneSFX.Instance.PlaySFX(GestioneSFX.Instance.attack);
+
         facingDirection = transform.localScale.x > 0 ? 1 : -1;
 
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackPoint.position,AttackRange,EnemyLayer);
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(AttackPoint.position, AttackRange, EnemyLayer);
 
-        foreach(Collider2D enemy in hitEnemies)
+        foreach (Collider2D enemy in hitEnemies)
         {
 
             Debug.Log("We hit " + enemy.name);
 
             Enemy enemyScript = enemy.GetComponent<Enemy>();
             enemyScript.TakeDamage(AttackDamage, facingDirection);
-            
+
         }
 
     }

@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform wallCheck;
     [SerializeField] private LayerMask whatIsWall;
     [SerializeField] private float wallCheckDistance;
-   
+
     [SerializeField] private float WallJumpDuration;
     [SerializeField] private Vector2 WallJumpForce;
     [SerializeField] private float wallJumpDuration = 0.2f;
@@ -52,19 +52,30 @@ public class PlayerController : MonoBehaviour
     private float wallJumpDirection;
     private float wallJumpTime = 0.2f;
     private float wallJumpCounter;
-    private Vector2 wallJumpPower = new Vector2(8f,16f);
+    private Vector2 wallJumpPower = new Vector2(8f, 16f);
 
     [Header("Stats")]
-    public int MaxHealth;
+    public int MaxHealth = 100;
     public int currentHealth;
     public bool isDead = false;
     [SerializeField] private GameObject damageEffect;
+    public UIManager uiManager;
 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
+
+        // Trova il UIManager se non assegnato
+        if (uiManager == null)
+        {
+            uiManager = UnityEngine.Object.FindAnyObjectByType<UIManager>();
+            if (uiManager == null)
+            {
+                Debug.LogWarning("UIManager non trovato! Controlla che esista in scena.");
+            }
+        }
     }
 
     void Start()
@@ -72,6 +83,7 @@ public class PlayerController : MonoBehaviour
         dashTrailRenderer = GetComponent<TrailRenderer>();
         FacingDirection = 1;
         currentHealth = MaxHealth;
+        uiManager.SetMaxHealth(MaxHealth);
         canDash = true;
     }
 
@@ -118,11 +130,11 @@ public class PlayerController : MonoBehaviour
         }
 
         float moveHorizontal = Input.GetAxisRaw("Horizontal");
-       
+
 
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && canDash == true)
         {
-            StartCoroutine(Dash( ));
+            StartCoroutine(Dash());
         }
 
         Wallslide();
@@ -130,11 +142,11 @@ public class PlayerController : MonoBehaviour
 
         HandleAnimation();
 
-        if(!isWallJumping)
+        if (!isWallJumping)
         {
-            Flip(); 
+            Flip();
         }
-        
+
     }
 
     private void FixedUpdate()
@@ -171,12 +183,12 @@ public class PlayerController : MonoBehaviour
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
         anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isWallSlide", isWallDetected);
-    
+
 
     }
 
     private void Flip()
-{
+    {
         if (FacingRight && xImput < 0f || !FacingRight && xImput > 0f)
         {
             FacingRight = !FacingRight;
@@ -186,12 +198,12 @@ public class PlayerController : MonoBehaviour
             transform.localScale = localScale;
 
         }
-}
- 
+    }
+
 
     private IEnumerator Dash()
     {
-        Physics2D.IgnoreLayerCollision(7,8,true);
+        Physics2D.IgnoreLayerCollision(7, 8, true);
 
         anim.SetTrigger("Dash");
 
@@ -207,7 +219,7 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(dashTime);
 
-        rb.gravityScale = originalGravity; 
+        rb.gravityScale = originalGravity;
         isDashing = false;
 
         dashTrailRenderer.emitting = false;
@@ -225,11 +237,11 @@ public class PlayerController : MonoBehaviour
         if (isWallDetected && !isGrounded && xImput != 0)
         {
             isWallSliding = true;
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x,Math.Clamp(rb.linearVelocity.y,-wallSlideSpeed,float. MaxValue));
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Math.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
         }
         else
-        { 
-        isWallSliding = false; 
+        {
+            isWallSliding = false;
         }
     }
 
@@ -243,12 +255,12 @@ public class PlayerController : MonoBehaviour
             CancelInvoke(nameof(StopWallJump));
         }
         else
-        { 
-        wallJumpCounter -= Time.deltaTime;
+        {
+            wallJumpCounter -= Time.deltaTime;
         }
         if (Input.GetButtonDown("Jump") && wallJumpCounter > 0f)
-        { 
-        isWallJumping = true;
+        {
+            isWallJumping = true;
             rb.linearVelocity = new Vector2(wallJumpDirection * wallJumpPower.x, wallJumpPower.y);
             wallJumpCounter = 0f;
 
@@ -280,11 +292,13 @@ public class PlayerController : MonoBehaviour
 
         currentHealth -= damage;
 
+        uiManager.SetHealth(currentHealth);
+
         if (damageEffect != null)
         {
             GameObject fx = Instantiate(damageEffect, transform.position, Quaternion.identity);
 
-           
+
             if (hitDirection < 0)
             {
                 fx.transform.localScale = new Vector3(-1, 1, 1);
@@ -311,6 +325,9 @@ public class PlayerController : MonoBehaviour
 
         anim.SetBool("IsDead", true);
 
+        if (GestioneSFX.Instance != null)
+            GestioneSFX.Instance.PlaySFX(GestioneSFX.Instance.death);
+
         rb.linearVelocity = Vector2.zero;
 
         this.enabled = false;
@@ -320,7 +337,24 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator GameOverDelay()
     {
-        yield return new WaitForSeconds(2f); 
-        GameManager.Instance.GameOver();
+        yield return new WaitForSeconds(2f);
+        uiManager.GameOver();
+        if (GestoreMusica.Instance != null)
+        {
+            GestoreMusica.Instance.CambiaMusica(GestoreMusica.Instance.musicaGameOver);
+        }
+    }
+
+    public void ResetPlayer()
+    {
+        currentHealth = MaxHealth;
+        uiManager.SetMaxHealth(MaxHealth);
+        isDead = false;
+
+        anim.SetBool("IsDead", false);
+        anim.Rebind();
+        anim.Update(0f);
+
+        this.enabled = true;
     }
 }

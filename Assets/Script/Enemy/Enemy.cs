@@ -25,8 +25,8 @@ public class Enemy : MonoBehaviour
     [Header("Combat Control")]
     public int hitsToHurt = 3;
     private int hitCounter = 0;
-    private bool isAttacking = false;  
-    private bool isHurt = false;      
+    private bool isAttacking = false;
+    private bool isHurt = false;
     [Header("ColliderCheck")]
     [SerializeField] private float EnemyGroundCheckDistance;
     [SerializeField] private LayerMask EnemyWhatIsGround;
@@ -39,7 +39,7 @@ public class Enemy : MonoBehaviour
 
     public LayerMask Layerplayer;
     public bool isBoss = false;
-
+    public UIManager uiManager;
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -50,6 +50,9 @@ public class Enemy : MonoBehaviour
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player").transform;
 
+        if (isBoss && uiManager == null)
+            uiManager = Object.FindFirstObjectByType<UIManager>();
+
         MaxHealth = currentHealth = 100;
         FacingDirection = -1;
         FacingLeft = true;
@@ -57,7 +60,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        if (isHurt) return; 
+        if (isHurt) return;
 
 
         IsInRange = Vector2.Distance(transform.position, player.position) <= PatrolRange;
@@ -164,12 +167,18 @@ public class Enemy : MonoBehaviour
 
         this.enabled = false;
 
-        if (isBoss)
+        if (isBoss && uiManager != null)
         {
-            GameManager.Instance.Victory();
+            StartCoroutine(VictoryDelay());
         }
 
         Destroy(gameObject, 3f);
+    }
+
+    IEnumerator VictoryDelay()
+    {
+        yield return new WaitForSeconds(2f);
+        uiManager.Victory();
     }
 
     private void EnemyFlip()
@@ -191,7 +200,7 @@ public class Enemy : MonoBehaviour
             PlayerController player = collInfo.GetComponent<PlayerController>();
             if (player != null)
             {
-                player.TakeDamage(AttackDamage,FacingDirection);
+                player.TakeDamage(AttackDamage, FacingDirection);
             }
         }
     }
@@ -214,7 +223,6 @@ public class Enemy : MonoBehaviour
     }
 
 }
-
 
 
 
