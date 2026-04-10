@@ -16,7 +16,9 @@ public class GestioneSFX : MonoBehaviour
     public AudioClip destroyBoss;
     public AudioClip jump;
     public AudioClip dash;
-    public AudioClip damage;
+    public AudioClip EnemyAttack;
+    public AudioClip bossAttack;
+    public AudioClip playerHurt;
     public AudioClip hurtEnemy1;
     public AudioClip hurtEnemy2;
     public AudioClip hurtBoss;
@@ -26,7 +28,10 @@ public class GestioneSFX : MonoBehaviour
     public AudioClip statueBoss;
     public AudioClip fire;
     public AudioClip unlockDoor;
-
+    public AudioClip lockdoor;
+    public AudioClip spawnEnemy;
+    public AudioClip playerHurtTrap;
+    public AudioClip musicaVittoria;
 
 
     [Range(0f, 1f)]
@@ -108,9 +113,9 @@ public class GestioneSFX : MonoBehaviour
         PlaySFX(destroyBoss);
     }
 
-    public void PlayDestroyDamage()
+    public void PlayEnemyAttack()
     {
-        PlaySFX(damage);
+        PlaySFX(EnemyAttack);
     }
 
     public void PlayHurtEnemy1()
@@ -153,10 +158,41 @@ public class GestioneSFX : MonoBehaviour
         PlaySFX(fire);
     }
 
+    public void PlayLockDoor()
+    {
+        PlaySFX(lockdoor);
+    }
+
     public void PlayUnlockDoor()
     {
         PlaySFX(unlockDoor);
     }
+
+    public void PlaySpawnEnemy()
+    {
+        PlaySFX(spawnEnemy);
+    }
+
+    public void PlayPlayerHurt()
+    {
+        PlaySFX(playerHurt);
+    }
+
+    public void PlayPlayerHurtTrap()
+    {
+        PlaySFX(playerHurtTrap);
+    }
+
+    public void PlaybossAttack()
+    {
+        PlaySFX(bossAttack);
+    }
+
+    public void PlayVictorySound()
+    {
+        PlaySFX(musicaVittoria);
+    }
+
 
     public void PlaySFX(AudioClip clip)
     {

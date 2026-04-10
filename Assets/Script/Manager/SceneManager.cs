@@ -8,7 +8,7 @@ public class Impostazione_livello : MonoBehaviour
     public void Playbutton()
     {
 
-        PlayerPrefs.DeleteAll();
+        PlayerPrefs.DeleteKey("LastExitName");
 
         SceneManager.sceneLoaded += ResetPlayerOnLoad;
 
@@ -18,6 +18,12 @@ public class Impostazione_livello : MonoBehaviour
     public void Goback_Menubutton()
     {
         SceneManager.LoadScene("Menu");
+    }
+
+    public void Endbutton()
+    {
+        Application.Quit();
+        Debug.Log("Gioco chiuso");
     }
 
     private void ResetPlayerOnLoad(Scene scene, LoadSceneMode mode)

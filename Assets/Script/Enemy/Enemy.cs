@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class Enemy : MonoBehaviour
     private int hitCounter = 0;
     private bool isAttacking = false;
     private bool isHurt = false;
+
     [Header("ColliderCheck")]
     [SerializeField] private float EnemyGroundCheckDistance;
     [SerializeField] private LayerMask EnemyWhatIsGround;
@@ -36,10 +38,23 @@ public class Enemy : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] private Transform EnemyAttackPoint;
     [SerializeField] private float EnemywallCheckDistance;
-
     public LayerMask Layerplayer;
-    public bool isBoss = false;
-    public UIManager uiManager;
+
+    [Header("HealthBar")]
+    [SerializeField] private Slider healthSlider;
+    [SerializeField] private Gradient gradient;
+    [SerializeField] private Image fill;
+
+  
+    public enum EnemyType
+    {
+        Enemy1,
+        Enemy2
+    }
+    public EnemyType enemyType;
+
+
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -50,10 +65,17 @@ public class Enemy : MonoBehaviour
         if (player == null)
             player = GameObject.FindGameObjectWithTag("Player").transform;
 
-        if (isBoss && uiManager == null)
-            uiManager = Object.FindFirstObjectByType<UIManager>();
 
-        MaxHealth = currentHealth = 100;
+        currentHealth = MaxHealth;
+
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = MaxHealth;
+            healthSlider.value = currentHealth;
+
+            fill.color = gradient.Evaluate(1f);
+        }
+
         FacingDirection = -1;
         FacingLeft = true;
     }
@@ -122,8 +144,33 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage, int hitDirection)
     {
+        if (GestioneSFX.Instance != null)
+        {
+            switch (enemyType)
+            {
+                case EnemyType.Enemy1:
+                    GestioneSFX.Instance.PlayHurtEnemy1();
+                    break;
+            }
 
-        currentHealth -= damage;
+            switch (enemyType)
+            {
+                case EnemyType.Enemy2:
+                    GestioneSFX.Instance.PlayHurtEnemy2();
+                    break;
+            }
+        }
+
+            currentHealth -= damage;
+
+        if (healthSlider != null)
+        {
+            healthSlider.value = currentHealth;
+
+            float normalized = healthSlider.normalizedValue;
+            fill.color = gradient.Evaluate(normalized);
+        }
+
         hitCounter++;
 
         if (damageEffect != null)
@@ -160,26 +207,36 @@ public class Enemy : MonoBehaviour
 
     public void Die()
     {
-        anim.SetBool("IsDead", true);
+        if (GestioneSFX.Instance != null)
+        {
+            switch (enemyType)
+            {
+                case EnemyType.Enemy1:
+                    GestioneSFX.Instance.PlayDestroyEnemy1();
+                    break;
+            }
+
+            switch (enemyType)
+            {
+                case EnemyType.Enemy2:
+                    GestioneSFX.Instance.PlayDestroyEnemy2();
+                    break;
+
+            }
+        }
+
+                    anim.SetBool("IsDead", true);
         isAttacking = false;
 
         Physics2D.IgnoreLayerCollision(7, 8, true);
 
         this.enabled = false;
 
-        if (isBoss && uiManager != null)
-        {
-            StartCoroutine(VictoryDelay());
-        }
 
         Destroy(gameObject, 3f);
     }
 
-    IEnumerator VictoryDelay()
-    {
-        yield return new WaitForSeconds(2f);
-        uiManager.Victory();
-    }
+ 
 
     private void EnemyFlip()
     {
@@ -189,10 +246,20 @@ public class Enemy : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+
+        if (healthSlider != null)
+        {
+            Vector3 sliderScale = healthSlider.transform.localScale;
+            sliderScale.x *= -1;
+            healthSlider.transform.localScale = sliderScale;
+        }
     }
 
     void Attack()
     {
+        if (GestioneSFX.Instance != null)
+            GestioneSFX.Instance.PlayEnemyAttack();
+
         Collider2D collInfo = Physics2D.OverlapCircle(EnemyAttackPoint.position, AttackRange, Layerplayer);
 
         if (collInfo)

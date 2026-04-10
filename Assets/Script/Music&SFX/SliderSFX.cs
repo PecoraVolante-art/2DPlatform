@@ -1,18 +1,29 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SliderSFX : MonoBehaviour
+public class SliderSFX : MonoBehaviour, IPointerUpHandler
 {
     public Slider slider;
+    public AudioClip previewClip;
 
     void Start()
     {
-        slider.value = PlayerPrefs.GetFloat("SFXVolume", 1f); //porta la posizione dello slider alla posizione delle preference presa dalla GestoineSfx
+        slider.value = PlayerPrefs.GetFloat("SFXVolume", 1f);
         slider.onValueChanged.AddListener(CambiaVolume);
     }
 
     void CambiaVolume(float valore)
     {
-        GestioneSFX.Instance.SetVolume(valore);
+        if (GestioneSFX.Instance != null)
+            GestioneSFX.Instance.SetVolume(valore);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (GestioneSFX.Instance != null && previewClip != null)
+        {
+            GestioneSFX.Instance.PlaySFX(previewClip);
+        }
     }
 }

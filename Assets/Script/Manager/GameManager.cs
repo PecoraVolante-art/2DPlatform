@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public int objectivesCompleted = 0;
+    public bool sfxStatuePlayed = false;
 
     private void Awake()
     {
@@ -45,6 +46,14 @@ public class GameManager : MonoBehaviour
     {
         objectivesCompleted++;
         Debug.Log("Obiettivo completato! Totale: " + objectivesCompleted);
+
+        if (objectivesCompleted >= 4 && sfxStatuePlayed == false)
+        {
+            if (GestioneSFX.Instance != null)
+                GestioneSFX.Instance.PlayStatue();
+
+            sfxStatuePlayed = true;
+        }
     }
 
     public bool AreAllObjectivesCompleted(int totalObjectives)

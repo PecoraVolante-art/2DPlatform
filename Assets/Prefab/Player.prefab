@@ -126,10 +126,11 @@ MonoBehaviour:
   isWallJumping: 0
   isWallSliding: 0
   wallSlidingSpeed: 2
-  MaxHealth: 100
+  MaxHealth: 150
   currentHealth: 0
   isDead: 0
   damageEffect: {fileID: 2044572384169200579, guid: 8092132f3a7267546ab9b6fb5afd8c2d, type: 3}
+  uiManager: {fileID: 0}
 --- !u!114 &6391980333985552603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +150,6 @@ MonoBehaviour:
     m_Bits: 128
   AttackDamage: 10
   AttackRate: 2
-  knockbackForce: 50
 --- !u!50 &3276660070961342241
 Rigidbody2D:
   serializedVersion: 5

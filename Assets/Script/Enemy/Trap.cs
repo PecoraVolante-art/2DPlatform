@@ -13,6 +13,9 @@ public class Trap : MonoBehaviour
         {
             if (Time.time - lastDamageTime >= damageInterval)
             {
+                if (GestioneSFX.Instance != null)
+                    GestioneSFX.Instance.PlayPlayerHurtTrap();
+
                 collision.gameObject.GetComponent<PlayerController>().TakeDamage(trapDamage,0);
                 lastDamageTime = Time.time;
                 

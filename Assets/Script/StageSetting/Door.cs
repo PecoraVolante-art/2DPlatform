@@ -13,6 +13,8 @@ public class Door : MonoBehaviour
     {
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
+            if (GestioneSFX.Instance != null)
+                GestioneSFX.Instance.PlayScale();
             PlayerPrefs.SetString("LastExitName", exitName);
             SceneManager.LoadScene(sceneToLoad);
            

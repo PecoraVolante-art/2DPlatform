@@ -74,12 +74,28 @@ public class GestoreMusica : MonoBehaviour
     {
         if (scene.name == "Menu")
         {
-            CambiaMusica(musicaMenu);
+            PlayMuicaMenu();
         }
         else if (scene.name == "Base" || scene.name == "Dungeon")
         {
-            CambiaMusica(musicaBaseDungeon);
+            PlayMuicaDungeon();
         }
+    }
+
+    public void PlayMuicaDungeon()
+    {
+        CambiaMusica(musicaBaseDungeon);
+    }
+
+    public void PlayMuicaMenu()
+    {
+        CambiaMusica(musicaMenu);
+    }
+
+    public void PlayMusicaGameOver()
+    {
+        CambiaMusica(musicaGameOver);
+
     }
 
     private void OnDestroy()

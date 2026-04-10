@@ -39,7 +39,7 @@ public class AttackComand : MonoBehaviour
         anim.SetTrigger("Attack");
 
         if (GestioneSFX.Instance != null)
-            GestioneSFX.Instance.PlaySFX(GestioneSFX.Instance.attack);
+            GestioneSFX.Instance.PlayAttack();
 
         facingDirection = transform.localScale.x > 0 ? 1 : -1;
 
@@ -48,11 +48,19 @@ public class AttackComand : MonoBehaviour
         foreach (Collider2D enemy in hitEnemies)
         {
 
-            Debug.Log("We hit " + enemy.name);
-
             Enemy enemyScript = enemy.GetComponent<Enemy>();
-            enemyScript.TakeDamage(AttackDamage, facingDirection);
+            if (enemyScript != null)
+            {
+                enemyScript.TakeDamage(AttackDamage, facingDirection);
+                continue;
+            }
 
+            // Controlla Boss
+            Boss bossScript = enemy.GetComponent<Boss>();
+            if (bossScript != null)
+            {
+                bossScript.TakeDamage(AttackDamage, facingDirection);
+            }
         }
 
     }

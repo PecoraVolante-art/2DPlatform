@@ -27,6 +27,9 @@ public class BossStartStatue : MonoBehaviour
             WhiteMoon.SetActive(false);
             RedMoon.SetActive(true);
 
+            if (GestioneSFX.Instance != null)
+                GestioneSFX.Instance.PlayStatueBoss();
+
             if (GestoreMusica.Instance != null)
             {
                 GestoreMusica.Instance.CambiaMusica(GestoreMusica.Instance.musicaBoss);
@@ -49,7 +52,8 @@ public class BossStartStatue : MonoBehaviour
             Instantiate(SpawnEffect, BossSpawnPoint.position, Quaternion.identity);
         }
 
-
+        if (GestioneSFX.Instance != null)
+            GestioneSFX.Instance.PlaySpawnEnemy();
         Instantiate(Boss, BossSpawnPoint.position, Quaternion.identity);
     }
 

@@ -6,17 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/BossRoom.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
-    path: Assets/Scenes/Dungeon.unity
-    guid: ef7e2fb66934e5f499554d93d5c1170d
+    path: Assets/Scenes/Menu.unity
+    guid: dbff70a8042c52448a1fad8f146a43f0
   - enabled: 1
     path: Assets/Scenes/Base.unity
     guid: 42763ad89c71b2b469f9fbf08f2a27a6
   - enabled: 1
-    path: Assets/Scenes/Menu.unity
-    guid: dbff70a8042c52448a1fad8f146a43f0
+    path: Assets/Scenes/Dungeon.unity
+    guid: ef7e2fb66934e5f499554d93d5c1170d
+  - enabled: 1
+    path: Assets/Scenes/BossRoom.unity
+    guid: 8c9cfa26abfee488c85f1582747f6a02
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

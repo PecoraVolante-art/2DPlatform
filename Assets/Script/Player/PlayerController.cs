@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -214,6 +212,8 @@ public class PlayerController : MonoBehaviour
         Physics2D.IgnoreLayerCollision(7, 8, true);
 
         anim.SetTrigger("Dash");
+        if (GestioneSFX.Instance != null)
+            GestioneSFX.Instance.PlayDash();
 
         canDash = false;
         isDashing = true;
@@ -268,6 +268,9 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetButtonDown("Jump") && wallJumpCounter > 0f)
         {
+            if (GestioneSFX.Instance != null)
+                GestioneSFX.Instance.PlayJump();
+
             isWallJumping = true;
             rb.linearVelocity = new Vector2(wallJumpDirection * wallJumpPower.x, wallJumpPower.y);
             wallJumpCounter = 0f;
@@ -290,6 +293,8 @@ public class PlayerController : MonoBehaviour
 
     private void Jump(float force)
     {
+        if (GestioneSFX.Instance != null)
+            GestioneSFX.Instance.PlayJump();
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, force);
     }
 
@@ -299,6 +304,9 @@ public class PlayerController : MonoBehaviour
         if (isDead) return;
 
         currentHealth -= damage;
+
+        if (GestioneSFX.Instance != null)
+            GestioneSFX.Instance.PlayPlayerHurt();
 
         uiManager.SetHealth(currentHealth);
 
@@ -334,7 +342,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("IsDead", true);
 
         if (GestioneSFX.Instance != null)
-            GestioneSFX.Instance.PlaySFX(GestioneSFX.Instance.death);
+            GestioneSFX.Instance.PlayDeath();
 
         rb.linearVelocity = Vector2.zero;
 
@@ -349,7 +357,7 @@ public class PlayerController : MonoBehaviour
         uiManager.GameOver();
         if (GestoreMusica.Instance != null)
         {
-            GestoreMusica.Instance.CambiaMusica(GestoreMusica.Instance.musicaGameOver);
+            GestoreMusica.Instance.PlayMusicaGameOver();
         }
     }
 

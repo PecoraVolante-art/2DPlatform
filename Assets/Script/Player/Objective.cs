@@ -13,6 +13,8 @@ public class Objective : MonoBehaviour
     {
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && !flameActive)
         {
+            if (GestioneSFX.Instance != null)
+                GestioneSFX.Instance.PlayFire();
             pressEIcon.SetActive(false);
             flame.SetActive(true);
             flameActive = true;
@@ -22,6 +24,7 @@ public class Objective : MonoBehaviour
                 GameManager.Instance.CompleteObjective();
                 counted = true;
             }
+
         }
 
         if (flameActive)

@@ -22,6 +22,8 @@ public class Portal : MonoBehaviour
         if (GameManager.Instance != null && GameManager.Instance.AreAllObjectivesCompleted(4))
         {
             ShowAndActivatePortal();
+
+
         }
     }
 
@@ -31,6 +33,8 @@ public class Portal : MonoBehaviour
         {
             PlayerPrefs.SetString("LastExitName", exitName);
             SceneManager.LoadScene(sceneToLoad);
+            if (GestioneSFX.Instance != null)
+                GestioneSFX.Instance.PlayPortal();
 
         }
     }
